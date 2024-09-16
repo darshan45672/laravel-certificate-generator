@@ -4,9 +4,9 @@ namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
 
-class Cerificate extends Page
+class Certificate extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string $view = 'filament.pages.cerificate';
+    protected static string $view = 'filament.pages.certificate';
 }

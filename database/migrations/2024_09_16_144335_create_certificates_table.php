@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('certificate_templates', function (Blueprint $table) {
-            $table->id();
+        Schema::create('certificates', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('template_name');
             $table->longText('template_image');
             $table->longText('description')->nullable();
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->float('unique_id_angle')->default(0);
             $table->string('unique_id_color')->default('#000000');
             $table->string('description_color')->default('#000000');
+
             $table->timestamps();
         });
     }
@@ -35,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('certificate_templates');
+        Schema::dropIfExists('certificates');
     }
 };

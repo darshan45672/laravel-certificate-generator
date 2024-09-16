@@ -1,4 +1,22 @@
-<div style="text-align:center">
+{{-- The whole world belongs to you. --}}
+{{-- <div>
+    <x-filament::input.wrapper class="mb-5">
+    <x-filament::input
+        type="text"
+        wire:model="name"
+    />
+</x-filament::input.wrapper>
+ 
+<x-filament::input.wrapper>
+    <x-filament::input.select wire:model="status">
+        <option value="draft">Draft</option>
+        <option value="reviewing">Reviewing</option>
+        <option value="published">Published</option>
+    </x-filament::input.select>
+</x-filament::input.wrapper>
+</div> --}}
+
+<div >
     <div 
         id="dropZone" 
         class="drag-drop-zone" 
@@ -21,8 +39,42 @@
 
     <!-- Coordinates display -->
     <div id="coordinates">
-        <p>Coordinates of Element 1: <span id="coords1">X: 0, Y: 0</span></p>
-        <p>Coordinates of Element 2: <span id="coords2">X: 0, Y: 0</span></p>
+        <x-filament::input.wrapper class="mb-5">
+            <x-filament::input
+                type="number"
+                wire:model="xCoord1"
+                min="0" 
+                id="xCoord1"
+                onchange="updatePosition('draggable1', this.value, 'Y')"
+            />
+        </x-filament::input.wrapper>
+        <x-filament::input.wrapper class="mb-5">
+            <x-filament::input
+                type="number"
+                wire:model="yCoord1"
+                id="yCoord1"
+                min="0" 
+                onchange="updatePosition('draggable1', this.value, 'X')"
+            />
+        </x-filament::input.wrapper>
+        <x-filament::input.wrapper class="mb-5">
+            <x-filament::input
+                type="number"
+                wire:model="xCoord2"
+                id="xCoord2"
+                 min="0" 
+                onchange="updatePosition('draggable2', this.value, 'Y')"
+            />
+        </x-filament::input.wrapper>
+        <x-filament::input.wrapper class="mb-5">
+            <x-filament::input
+                type="number"
+                wire:model="yCoord2"
+                id="yCoord2"
+                 min="0" 
+                onchange="updatePosition('draggable2', this.value, 'X')"
+            />
+        </x-filament::input.wrapper>
     </div>
 
     <style>
@@ -36,12 +88,10 @@
             text-align: center;
             transition: background-color 0.2s ease;
         }
-    
         .drag-drop-zone.dragover {
             background-color: #f0f0f0;
             border-color: #666;
         }
-
         .draggable {
             width: 100px;
             height: 50px;
@@ -54,16 +104,14 @@
             left: 50px;
             cursor: move;
         }
-
         .image-container {
             position: relative;
             display: inline-block;
         }
-
-        #coordinates {
-            margin-top: 20px;
-        }
     </style>
+    <div class="container">
+        <h1 class="text-xl">haah</h1>
+    </div>
 </div>
 
 <script>
@@ -72,26 +120,20 @@
     const preview = document.getElementById('preview');
     const draggable1 = document.getElementById('draggable1');
     const draggable2 = document.getElementById('draggable2');
-    const coords1 = document.getElementById('coords1');
-    const coords2 = document.getElementById('coords2');
 
-    // Drag over effect
     function handleDragOver(event) {
         event.preventDefault();
         dropZone.classList.add('dragover');
     }
 
-    // Drag leave effect
     function handleDragLeave(event) {
         event.preventDefault();
         dropZone.classList.remove('dragover');
     }
 
-    // Drop handler
     function handleDrop(event) {
         event.preventDefault();
         dropZone.classList.remove('dragover');
-
         const files = event.dataTransfer.files;
         if (files.length > 0) {
             fileInput.files = files;
@@ -99,7 +141,6 @@
         }
     }
 
-    // Handle file selection and preview
     function previewFile() {
         const file = fileInput.files[0];
         const reader = new FileReader();
@@ -107,8 +148,6 @@
         reader.onloadend = function () {
             preview.src = reader.result;
             preview.style.display = 'block';
-            
-            // Display draggable elements when image is loaded
             draggable1.style.display = 'block';
             draggable2.style.display = 'block';
         };
@@ -118,13 +157,11 @@
         }
     }
 
-    // Click to trigger file input
     dropZone.addEventListener('click', function() {
         fileInput.click();
     });
 
-    // Dragging logic with boundary constraints
-    function makeElementDraggable(draggableElement, coordsElement) {
+    function makeElementDraggable(draggableElement, coordXInput, coordYInput) {
         let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
 
         draggableElement.onmousedown = function(e) {
@@ -134,22 +171,18 @@
 
             document.onmousemove = function(e) {
                 e.preventDefault();
-
                 offsetX = mouseX - e.clientX;
                 offsetY = mouseY - e.clientY;
                 mouseX = e.clientX;
                 mouseY = e.clientY;
 
-                // Get the image container dimensions
                 const rect = preview.getBoundingClientRect();
                 const imageWidth = rect.width;
                 const imageHeight = rect.height;
 
-                // Calculate the new position
                 let newTop = draggableElement.offsetTop - offsetY;
                 let newLeft = draggableElement.offsetLeft - offsetX;
 
-                // Ensure the element stays within the image boundaries
                 if (newTop < 0) newTop = 0;
                 if (newLeft < 0) newLeft = 0;
                 if (newTop + draggableElement.offsetHeight > imageHeight) {
@@ -159,15 +192,11 @@
                     newLeft = imageWidth - draggableElement.offsetWidth;
                 }
 
-                // Update the draggable element's position
                 draggableElement.style.top = newTop + "px";
                 draggableElement.style.left = newLeft + "px";
 
-                // Calculate and update position relative to the image
-                const elemX = newLeft;
-                const elemY = newTop;
-
-                coordsElement.innerText = `X: ${Math.round(elemX)}, Y: ${Math.round(elemY)}`;
+                coordXInput.value = Math.round(newLeft);
+                coordYInput.value = Math.round(newTop);
             };
 
             document.onmouseup = function() {
@@ -177,7 +206,29 @@
         };
     }
 
-    // Make both draggable elements draggable and display their coordinates
-    makeElementDraggable(draggable1, coords1);
-    makeElementDraggable(draggable2, coords2);
+    makeElementDraggable(draggable1, document.getElementById('xCoord1'), document.getElementById('yCoord1'));
+    makeElementDraggable(draggable2, document.getElementById('xCoord2'), document.getElementById('yCoord2'));
+
+    function updatePosition(draggableId, value, axis) {
+        const draggable = document.getElementById(draggableId);
+        const previewRect = preview.getBoundingClientRect();
+        const imageWidth = previewRect.width;
+        const imageHeight = previewRect.height;
+
+        let newPos = parseInt(value);
+
+        if (axis === 'X') {
+            if (newPos < 0) newPos = 0;
+            if (newPos + draggable.offsetWidth > imageWidth) {
+                newPos = imageWidth - draggable.offsetWidth;
+            }
+            draggable.style.left = newPos + "px";
+        } else {
+            if (newPos < 0) newPos = 0;
+            if (newPos + draggable.offsetHeight > imageHeight) {
+                newPos = imageHeight - draggable.offsetHeight;
+            }
+            draggable.style.top = newPos + "px";
+        }
+    }
 </script>

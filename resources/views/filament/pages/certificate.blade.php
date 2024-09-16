@@ -1,3 +1,4 @@
 <x-filament-panels::page>
-    <livewire:counter />
+{{-- <h1>hahah</h1> --}}
+<livewire:certificate />
 </x-filament-panels::page>
