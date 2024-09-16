@@ -6,7 +6,7 @@
         wire:model="name"
     />
 </x-filament::input.wrapper>
- 
+
 <x-filament::input.wrapper>
     <x-filament::input.select wire:model="status">
         <option value="draft">Draft</option>
@@ -17,64 +17,93 @@
 </div> --}}
 
 <div >
-    <div 
-        id="dropZone" 
-        class="drag-drop-zone" 
-        ondrop="handleDrop(event)" 
-        ondragover="handleDragOver(event)" 
+    <div class="flex justify-start gap-8 w-full items-center">
+        <div>
+    <div
+        id="dropZone"
+        class="drag-drop-zone"
+        ondrop="handleDrop(event)"
+        ondragover="handleDragOver(event)"
         ondragleave="handleDragLeave(event)">
         <p>Drag & Drop your file here or click to upload</p>
         <input type="file" wire:model="file" id="fileInput" onchange="previewFile()" style="display: none;" />
     </div>
-    
+
+
+    <div id="coordinates" class="w-full">
+        <div class="flex gap-6">
+            <div>
+        <label for="xCoord1" class="block text-sm font-medium text-gray-700 mb-2">Description X Coordinate:</label>
+    <x-filament::input.wrapper class="mb-5">
+        <x-filament::input
+            type="number"
+            wire:model="xCoord1"
+            min="0"
+            id="xCoord1"
+            onchange="updatePosition('draggable1', this.value, 'Y')"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+        />
+    </x-filament::input.wrapper>
+            </div>
+
+            <div>
+    <label for="yCoord1" class="block text-sm font-medium text-gray-700 mb-2">Description Y Coordinate:</label>
+    <x-filament::input.wrapper class="mb-5">
+        <x-filament::input
+            type="number"
+            wire:model="yCoord1"
+            id="yCoord1"
+            min="0"
+            onchange="updatePosition('draggable1', this.value, 'X')"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+        />
+    </x-filament::input.wrapper>
+            </div>
+        </div>
+
+        <div class="flex gap-6">
+            <div>
+    <label for="xCoord2" class="block text-sm font-medium text-gray-700 mb-2">Unique Id X Coordinate:</label>
+    <x-filament::input.wrapper class="mb-5">
+        <x-filament::input
+            type="number"
+            wire:model="xCoord2"
+            id="xCoord2"
+            min="0"
+            onchange="updatePosition('draggable2', this.value, 'Y')"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+        />
+    </x-filament::input.wrapper>
+            </div>
+
+            <div>
+    <label for="yCoord2" class="block text-sm font-medium text-gray-700 mb-2">Unique Id Y Coordinate:</label>
+    <x-filament::input.wrapper class="mb-5">
+        <x-filament::input
+            type="number"
+            wire:model="yCoord2"
+            id="yCoord2"
+            min="0"
+            onchange="updatePosition('draggable2', this.value, 'X')"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+        />
+    </x-filament::input.wrapper>
+            </div>
+        </div>
+</div>
+
+
+        </div>
+
     <div class="image-container" style="position: relative;">
-        <img id="preview" src="" alt="Image Preview" width="300" style="display: none;"/>
-        
+        <img id="preview" src="" alt="Image Preview" width="300" class="w-full" style="display: none;"/>
+
         <!-- Draggable Element 1 -->
         <div id="draggable1" class="draggable" style="display: none;">Description</div>
-        
+
         <!-- Draggable Element 2 -->
         <div id="draggable2" class="draggable" style="display: none;">Unique Id</div>
     </div>
-
-    <!-- Coordinates display -->
-    <div id="coordinates">
-        <x-filament::input.wrapper class="mb-5">
-            <x-filament::input
-                type="number"
-                wire:model="xCoord1"
-                min="0" 
-                id="xCoord1"
-                onchange="updatePosition('draggable1', this.value, 'Y')"
-            />
-        </x-filament::input.wrapper>
-        <x-filament::input.wrapper class="mb-5">
-            <x-filament::input
-                type="number"
-                wire:model="yCoord1"
-                id="yCoord1"
-                min="0" 
-                onchange="updatePosition('draggable1', this.value, 'X')"
-            />
-        </x-filament::input.wrapper>
-        <x-filament::input.wrapper class="mb-5">
-            <x-filament::input
-                type="number"
-                wire:model="xCoord2"
-                id="xCoord2"
-                 min="0" 
-                onchange="updatePosition('draggable2', this.value, 'Y')"
-            />
-        </x-filament::input.wrapper>
-        <x-filament::input.wrapper class="mb-5">
-            <x-filament::input
-                type="number"
-                wire:model="yCoord2"
-                id="yCoord2"
-                 min="0" 
-                onchange="updatePosition('draggable2', this.value, 'X')"
-            />
-        </x-filament::input.wrapper>
     </div>
 
     <style>
@@ -83,8 +112,9 @@
             padding: 40px;
             cursor: pointer;
             border-radius: 10px;
-            width: 300px;
-            margin: 0 auto;
+            width: 26rem;
+            height: 16rem;
+            margin: 2rem 0.6rem;
             text-align: center;
             transition: background-color 0.2s ease;
         }
@@ -109,9 +139,6 @@
             display: inline-block;
         }
     </style>
-    <div class="container">
-        <h1 class="text-xl">haah</h1>
-    </div>
 </div>
 
 <script>
