@@ -4,6 +4,7 @@ namespace App\Filament\Resources\CertificateResource\Pages;
 
 use App\Filament\Resources\CertificateResource;
 use Filament\Actions;
+use Filament\Forms\Components\View;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -20,7 +21,7 @@ class CreateCertificate extends CreateRecord
         return Form::make($this)
             ->schema([
                 // Including your custom view if needed
-                \Filament\Forms\Components\View::make('filament.pages.certificate'),
+                View::make('filament.pages.certificate'),
             ]);
     }
 }
