@@ -26,7 +26,6 @@ return new class extends Migration
             $table->float('unique_id_angle')->default(0);
             $table->string('unique_id_color')->default('#000000');
             $table->string('description_color')->default('#000000');
-
             $table->timestamps();
         });
     }

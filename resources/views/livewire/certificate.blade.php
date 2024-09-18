@@ -243,7 +243,7 @@
 
 <script>
     const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
+    const fileInput = document.getElementById('fileInput'); 
     const preview = document.getElementById('preview');
     const draggable1 = document.getElementById('description-drag');
     const draggable2 = document.getElementById('unique-id-drag');
@@ -289,49 +289,47 @@
     });
 
     function makeElementDraggable(draggableElement, coordXInput, coordYInput) {
-        let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
+    let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
 
-        draggableElement.onmousedown = function(e) {
+    draggableElement.onmousedown = function(e) {
+        e.preventDefault();
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        document.onmousemove = function(e) {
             e.preventDefault();
+            offsetX = mouseX - e.clientX;
+            offsetY = mouseY - e.clientY;
             mouseX = e.clientX;
             mouseY = e.clientY;
 
-            document.onmousemove = function(e) {
-                e.preventDefault();
-                offsetX = mouseX - e.clientX;
-                offsetY = mouseY - e.clientY;
-                mouseX = e.clientX;
-                mouseY = e.clientY;
+            const rect = preview.getBoundingClientRect();
+            const imageWidth = rect.width;
+            const imageHeight = rect.height;
 
-                const rect = preview.getBoundingClientRect();
-                const imageWidth = rect.width;
-                const imageHeight = rect.height;
+            // Update draggable element position within the image bounds
+            let newTop = draggableElement.offsetTop - offsetY;
+            let newLeft = draggableElement.offsetLeft - offsetX;
 
-                let newTop = draggableElement.offsetTop - offsetY;
-                let newLeft = draggableElement.offsetLeft - offsetX;
+            if (newTop < 0) newTop = 0;
+            if (newLeft < 0) newLeft = 0;
+            if (newTop > imageHeight - draggableElement.offsetHeight) newTop = imageHeight - draggableElement.offsetHeight;
+            if (newLeft > imageWidth - draggableElement.offsetWidth) newLeft = imageWidth - draggableElement.offsetWidth;
 
-                if (newTop < 0) newTop = 0;
-                if (newLeft < 0) newLeft = 0;
-                if (newTop + draggableElement.offsetHeight > imageHeight) {
-                    newTop = imageHeight - draggableElement.offsetHeight;
-                }
-                if (newLeft + draggableElement.offsetWidth > imageWidth) {
-                    newLeft = imageWidth - draggableElement.offsetWidth;
-                }
+            draggableElement.style.top = newTop + "px";
+            draggableElement.style.left = newLeft + "px";
 
-                draggableElement.style.top = newTop + "px";
-                draggableElement.style.left = newLeft + "px";
-
-                coordXInput.value = Math.round(newLeft);
-                coordYInput.value = Math.round(newTop);
-            };
-
-            document.onmouseup = function() {
-                document.onmousemove = null;
-                document.onmouseup = null;
-            };
+            // Update corresponding coordinates in input fields
+            coordXInput.value = newLeft;
+            coordYInput.value = newTop;
         };
-    }
+
+        document.onmouseup = function() {
+            document.onmousemove = null;
+            document.onmouseup = null;
+        };
+    };
+}
 
     makeElementDraggable(draggable1, document.getElementById('xCoord1'), document.getElementById('yCoord1'));
     makeElementDraggable(draggable2, document.getElementById('xCoord2'), document.getElementById('yCoord2'));
